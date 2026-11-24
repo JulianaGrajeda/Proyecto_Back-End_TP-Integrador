@@ -6,6 +6,11 @@ import environments from "./src/api/config/environments.js";
 import connection from "./src/api/database/db.js";
 import cors from "cors";
 
+import { loggerUrl } from "./src/api/middlewares/middlewares.js";
+import { authRoutes, exportRoutes, productRoutes, saleRoutes, userRoutes, viewRoutes } from "./src/api/routes/index.js";
+import { __dirname, join } from "./src/api/utils/index.js";
+import session from "express-session";
+
 const app = express(); // Creamos una instacia de express y la almacenamos en app
 const PORT = environments.port;
 
@@ -20,7 +25,8 @@ app.use(cors()); // Middleware que permite todas las solicitudes
 //Middleware loger para mostrar por consola las solicitudes de  nuestro servidor
 
 app.use((req,res, next) => {
-    let fecha  = new Date();
+    let
+    fecha  = new Date();
 
     console.log(`[${fecha.toLocaleDateString()} ${fecha.toLocaleTimeString
         ()}] ${req.method} ${req.url}`)
