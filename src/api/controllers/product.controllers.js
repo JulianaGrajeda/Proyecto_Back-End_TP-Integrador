@@ -31,8 +31,6 @@ export const getActiveProducts = async (req, res) => {
 }
 
 
-
-///////////////////
 // GET all products -> Obtener todos los productos
 
 export const getAllProducts = async (req, res) => {

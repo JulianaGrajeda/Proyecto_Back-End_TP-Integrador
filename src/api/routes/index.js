@@ -1,24 +1,17 @@
-// RUTAS DE PRODUCTO
+// Este sera nuestro archivo de barril que centraliza o "arrastra" todas las rutas. Importa las rutas con un nombre y las exporta con el mismo nombre
+import productRoutes from "./product.routes.js"; // Importamos las rutas de product.routes con este nombre
+import viewRoutes from "./view.routes.js";
+import authRoutes from "./auth.routes.js"; // Importamos las vistas de autenticacion
+import userRoutes from "./user.routes.js";
+import saleRoutes from "./sale.routes.js";
+import exportRoutes from "./export.routes.js";
 
-import { Router } from "express";
-import {validateId, validateProduct} from "../middlewares/middlewares.js";
-import { createProduct, getActiveProducts, getAllProducts, getProductById, modifyProduct, removeProduct} from "../controllers/product.controllers.js";
-
-const router = Router();
-
-// <--- GET --->
-
-router.get("/activo", getActiveProducts);
-
-router.get("/", getAllProducts);
-
-router.get("/:id", validateId, getProductById);
-
-// <--- POST --->
-
-router.post("/", validateProduct, createProduct);
-
-// <--- DELETE --->
-router.get("/:id", validateId, removeProduct);
-
-export default router;
+// Exportamos todas las rutas
+export {
+    productRoutes,
+    viewRoutes,
+    authRoutes,
+    userRoutes,
+    saleRoutes,
+    exportRoutes
+}
