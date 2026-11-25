@@ -6,14 +6,23 @@ import environments from "./src/api/config/environments.js";
 import connection from "./src/api/database/db.js";
 import cors from "cors";
 
-import { loggerUrl } from "./src/api/middlewares/middlewares.js";
-import { authRoutes, exportRoutes, productRoutes, saleRoutes, userRoutes, viewRoutes } from "./src/api/routes/index.js";
+// import { loggerUrl } from "./src/api/middlewares/middlewares.js";
+import {viewRoutes} from "./src/api/routes/index.js";
 import { __dirname, join } from "./src/api/utils/index.js";
-import session from "express-session";
+// import session from "express-session";
 
+
+
+/* ================================
+                CONFIG
+===================================*/
+
+const {port, session_key} = environments;
 const app = express(); // Creamos una instacia de express y la almacenamos en app
-const PORT = environments.port;
+const PORT = port;
 
+app.set("view engine", "ejs");
+app.set("views", join(__dirname, "src/views"));
 
 /* ================================
             Middlewares: 
@@ -33,6 +42,15 @@ app.use((req,res, next) => {
 
     next();
 });
+
+/*
+    Parseamos el JSON que enviamos de formularios para recibirlos
+    como objetos
+*/
+
+app.use(express.json()); 
+
+app.use(express.static(join(__dirname, "src/public")));
 
 
 
@@ -62,8 +80,9 @@ app.get("/api/products/:id", async (req, res) => {
     // req.body -> de acá recibimos la info de los forms
     // console.log(id);
 
-    const [rows] = await connection.query(`SELECT * FROM products WHERE products.
-        id  = ${id}`);
+    //Con los placeholders ? hacemos que nuestras consultas sean seguras.
+    const sql = `SELECT * FROM products WHERE products.id = ?`;
+    const [rows] = await connection.query(sql, [id]);
 
     console.log(rows);
 
@@ -73,27 +92,27 @@ app.get("/api/products/:id", async (req, res) => {
     });
 });
 
-// app.post("api/products")
-// app.put("api/products/:id")
-// app.delete("api/products/:id")
+// POST PRODUCT -> CREAR PRODUCTO
+app.post("api/products", async (req, res) => {
 
-/*
-    VISTAS EJS
+    //Extraemos los datos del from dentro del cuerpo de la petición
+    console.log(req.body);
+    const { name, description, price, category, brand, image} = req.body;
 
-    app.get("/dashboard/principal", async (req, res) => {
-        const [rows] = await connection.query(`SELECT * FROM products WHERE products.
-        id  = ${id}`);
+    const sql = "INSERT INTO products ( nombre_prod, descripcion_prod, precio_prod, categoria, marca, imagen) VALUES (?,?,?,?,?,?)";
 
-        res.render({
-            vista: index
-            productos: rows
-        });
+    await connection.query(sql, {name, description, price, category, brand, image});
 
-        });
-*/
+    res.status(201).json({
+        message : "Producto creado con éxito"
+    });
+});
 
+/*=====================
+	Rutas
+=====================*/
 
-
+app.use("/dashboard", viewRoutes);
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en el puerto http://localhost:${PORT}`);

@@ -1,0 +1,25 @@
+<!-- Incluimos los fragmentos ejs de arriba -->
+<%- include("partials/head.ejs")%>
+<%- include("partials/header.ejs")%>
+
+<!-- contenido principal -->
+<main>
+    <section class="getIdProduct-container">
+
+        <form id="getIdProductForm">
+
+            <label for="idProd">Id del producto</label>
+            <input type="number" name="id" id="id" required>
+
+            <input type="submit" value="Consultar producto">
+        </form>
+
+    </section>
+
+    <section id="contenedor-productos"></section>
+</main>
+
+<script src="../public/js/delete.js"></script>
+
+
+<%- include("partials/header.ejs")%>

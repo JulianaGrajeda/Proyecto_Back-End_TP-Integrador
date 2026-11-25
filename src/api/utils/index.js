@@ -9,6 +9,3 @@ export {
     join
 }
 
-// estaba esta aclaracion pero yo x lo menos tengo esa, revisa la tuya
-// OJOTA! Esto es a partir de Node 22 en adelante, para ver como se hace en versiones anteriores vayan al utils de la comi 131
-// https://github.com/profexabi/UTN2026_c2Div131/tree/main/6_tpIntegradorBack/src/api/utils

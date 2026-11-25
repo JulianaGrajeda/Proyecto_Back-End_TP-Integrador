@@ -93,7 +93,11 @@ a {
   outline-offset: 2px;
 }
 
-/* HEADER */
+/*=======================================
+
+                  HEADER
+
+  =======================================*/
 
 .header-totem {
   position: relative;
@@ -170,6 +174,18 @@ a {
 .nav a:hover {
   border-bottom-color: var(--color-header-texto);
   opacity: 0.85;
+}
+
+.busqueda{
+  text-align: center;
+}
+
+.busqueda input{
+  padding: 4px 6px ;
+  width: 80%;
+  border-radius: 9px;
+  border: 1.4px solid;
+  border-color: var(--color-primario);
 }
 
 @media (max-width: 900px) {
@@ -312,8 +328,11 @@ p {
   background: var(--color-resaltado);
 }
 
-/* PRODUCTOS */
+/*=======================================
 
+                PRODUCTOS
+
+  =======================================*/
 #contenedor-productos,
 .grilla-productos,
 .contenedor-productos {
@@ -437,7 +456,88 @@ p {
   box-shadow: var(--sombra-hover);
 }
 
-/* FOOTER */
+/*=======================================
+
+              VISTA OBTENER/GET
+
+  =======================================*/
+
+#getIdProductForm{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  gap: 8px;
+}
+
+#idProd{
+  border-radius: 7px;
+  padding: 4px 12px;
+  border: 1.60px solid var(--color-texto-secundario);
+}
+
+.btn-submit{
+  border: none;
+  border-radius: 7px;
+  padding: 4px 12px;
+  background-color: var(--color-primario);
+  color: var(--color-hueso);
+  transition: all 0.4s ease-out;
+}
+
+.btn-submit:hover{
+  background-color: #da5768;
+  transform: translateY(2px);
+}
+
+.lista-container{
+  padding-left: 0;
+  list-style: none;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.lista-container li{
+  width: 650px;
+  background-color: var(--color-hueso);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 12px;
+}
+
+.lista-producto img{
+  width: 110px;
+  border-radius: 12px;
+}
+
+.lista-producto p{
+  font-size: 20px;
+  padding-left: 20px;
+}
+
+/*=======================================
+
+              VISTA EDITAR / PUT
+
+  =======================================*/
+
+.lista-producto button{
+  border: none;
+  color: var(--color-hueso);
+  background-color: var(--color-primario);
+  border-radius: 12px;
+  font-size: 20px;
+  padding: 10px 15px;
+}
+
+/*=======================================
+
+                  FOOTER
+
+  =======================================*/
 
 .footer {
   margin-top: auto;
@@ -499,7 +599,11 @@ p {
   margin-top: 12px;
 }
 
-/* MEDIA QUERIES */
+/*=======================================
+
+                MEDIA QUERIES
+
+  =======================================*/
 
 @media (min-width: 768px) {
   .header-totem {
