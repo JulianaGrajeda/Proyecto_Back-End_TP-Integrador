@@ -5,8 +5,7 @@ import ProductModels from "../models/product.models.js"; // Importamos los model
 
 
 
-///////////////////
-// GET active products -> Obtener todos los productos activos
+// Obtener todos los productos activos
 export const getActiveProducts = async (req, res) => {
     try {
         const [rows] = await ProductModels.selectActiveProducts();
@@ -37,14 +36,10 @@ export const getActiveProducts = async (req, res) => {
 // GET all products -> Obtener todos los productos
 
 export const getAllProducts = async (req, res) => {
-    // Optimizacion 1: Manejamos errores con try...catch
     try {
         
-        // El controlador llama al modelo
         const [rows, tables] = await ProductModels.selectAllProducts();
 
-
-        // Optimizacion 3: Devolvemos 404 si no hay productos
         if (rows.length === 0) {
             return res.status(404).json({
                 message: "No se encontraron productos"
@@ -58,36 +53,25 @@ export const getAllProducts = async (req, res) => {
     } catch (error) {
         console.log("Error obteniendo productos: ", error);
 
-        // Optimizacion 4: Devolvemos error 500 si algo fallo en la conexion
-        // Ej: Fallo la conexion a la BBDD, tardo demasiado, la tabla no existe, error de sintaxis
         res.status(500).json({
             message: "Error interno del servidor al obtener productos"
         });
     }
 }
 
-
-
-///////////////////
 // GET product by id -> Obtener producto por id
 
 export const getProductById = async (req, res) => {
-    // Optimizacion 1: validamos el id y lo agregamos a req.id con el middleware validateId
-
-    // Optimizacion 2: manejo de errores con try...catch
     try {
 
         const [rows] = await ProductModels.selectProductById(req.id);
 
-
-        // Optimizacion 4: Devolvemos 404 si no existe producto con ese id
-        if (!rows.length) { // Forma mas optima? en lugar de rows.length === 0
+        if (!rows.length) {
             return res.status(404).json({
                 message: `No se encontro producto con id ${req.id}`
             });
         }
 
-        // console.log(rows);
         res.status(200).json({
             payload: rows
         });
@@ -95,8 +79,6 @@ export const getProductById = async (req, res) => {
     } catch (error) {
         console.log("Error obteniendo producto: ", error);
 
-        // Optimizacion 4: Devolvemos error 500 si algo fallo en la conexion
-        // Ej: Fallo la conexion a la BBDD, tardo demasiado, la tabla no existe, error de sintaxis
         res.status(500).json({
             message: "Error interno del servidor al obtener producto por id"
         });
@@ -104,15 +86,10 @@ export const getProductById = async (req, res) => {
 }
 
 
-
-///////////////////
-// POST product -> Crear producto
+// POST -> Crear producto
 
 export const createProduct = async (req, res) => {
 
-    // Optimizacion 1: Validamos los productos con el middleware validateProduct
-
-    // Optimizacion 2: Manejamos errores con try...catch
     try {
         const { category, image, name, price } = req.body;
 
@@ -121,29 +98,21 @@ export const createProduct = async (req, res) => {
 
         res.status(201).json({
             message: "Producto creado con exito",
-            productId: rows.insertId // Devolvemos el id que se acaba de asignar al prod
+            productId: rows.insertId
         });
 
     } catch (error) {
         console.log("Error creando producto: ", error);
 
-        // Optimizacion 3: Devolvemos error 500 si algo fallo en la conexion
-        // Ej: Fallo la conexion a la BBDD, tardo demasiado, la tabla no existe, error de sintaxis
         res.status(500).json({
             message: "Error interno del servidor al crear un producto"
         });
     }
 }
 
-
-
-///////////////////
-// PUT product -> Modificar producto
+// PUT -> Modificar producto
 
 export const modifyProduct = async (req, res) => {
-    // Optimizacion 1: Validar el envio del formulario con el middleware validateProduct
-
-    // Optimizacion 2: Manejamos los errores con try...catch 
     try {
         const { id, name, image, price, category, active } = req.body;
 
@@ -166,8 +135,6 @@ export const modifyProduct = async (req, res) => {
     } catch (error) {
         console.log("Error modificando producto: ", error);
 
-        // Optimizacion 3: Devolvemos error 500 si algo fallo en la conexion
-        // Ej: Fallo la conexion a la BBDD, tardo demasiado, la tabla no existe, error de sintaxis
         res.status(500).json({
             message: "Error interno del servidor al modificar un producto"
         });
@@ -176,13 +143,9 @@ export const modifyProduct = async (req, res) => {
 
 
 
-///////////////////
-// DELETE product -> Eliminar producto
+// DELETE -> Eliminar producto
 
 export const removeProduct = async (req, res) => {
-    // Optimizacion 1: Usar el middleware validateId
-
-    // Optimizacion 2: Manejo de errores
     try {
         
         await ProductModels.deleteProduct(req.id);
@@ -194,8 +157,6 @@ export const removeProduct = async (req, res) => {
     } catch (error) {
         console.log("Error eliminando producto: ", error);
 
-        // Optimizacion 3: Devolvemos error 500 si algo fallo en la conexion
-        // Ej: Fallo la conexion a la BBDD, tardo demasiado, la tabla no existe, error de sintaxis
         res.status(500).json({
             message: "Error interno del servidor al eliminar producto"
         });

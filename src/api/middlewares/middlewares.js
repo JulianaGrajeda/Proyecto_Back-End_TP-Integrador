@@ -1,8 +1,7 @@
 // Middleware para filtrar ids no validos
 const validateId = (req, res, next) => {
-	const id = Number(req.params.id); // Pasamos a number el id del parametro
+	const id = Number(req.params.id);
 
-	// Si el id no es un numero entero o es <= 0
 	if (!Number.isInteger(id) || id <= 0) {
 		return res.status(404).json({
 			message: "El id debe ser un numero entero positivo"
@@ -17,30 +16,28 @@ const validateId = (req, res, next) => {
 const validateProduct = (req, res, next) => {
 	const categoriasValidas = ["food", "drink"];
 
-	const { name, image, price, category } = req.body;
-	const errores = []; // Creamos un array vacio para ir metiendo los errores
+	const { nombre_prod, imagen, precio_prod, categoria } = req.body;
+	const errores = [];
 
-	// Verificamos los datos de entrada
-	if (!name || !image || !price || !category) {
+	if (!nombre_prod || !imagen || !precio_prod || !categoria) {
 		errores.push("Faltan campos requeridos");
 	}
 
-	// Verificamos name
-	if (typeof name !== "string" || name.trim().length < 2) {
+	if (typeof nombre_prod !== "string" || nombre_prod.trim().length < 2) {
 		errores.push("El nombre debe tener al menos 2 caracteres");
 	}
 
-	// Verificamos price
-	if (typeof price !== "number" || price <= 0) {
+
+	if (typeof precio_prod !== "number" || precio_prod <= 0) {
 		errores.push("El precio debe ser un numero mayor a 0");
 	}
 
-	// Verificamos category
-	if (!categoriasValidas.includes(category)) {
+
+	if (!categoriasValidas.includes(categoria)) {
 		errores.push("Categoria invalida");
 	}
 
-	// Si hay algun error en la lista, lo devolvemos en un 400
+
 	if (errores.length > 0) {
 		console.log(errores);
 		return res.status(400).json({
@@ -49,7 +46,7 @@ const validateProduct = (req, res, next) => {
 		});
 	}
 
-	next(); // Damos paso al siguiente middleware o a la response
+	next();
 }
 
 export {
