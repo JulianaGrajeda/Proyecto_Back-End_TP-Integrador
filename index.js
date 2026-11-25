@@ -1,119 +1,77 @@
-/* ================================
-            Importaciones
-===================================*/
-import express from "express";
+/*=====================
+	Importaciones
+=====================*/
+import express from "express"; // Importamos express luego de instalarlo con npm i express
 import environments from "./src/api/config/environments.js";
-import connection from "./src/api/database/db.js";
 import cors from "cors";
-
-// import { loggerUrl } from "./src/api/middlewares/middlewares.js";
-import {viewRoutes} from "./src/api/routes/index.js";
+import { loggerUrl } from "./src/api/middlewares/middlewares.js";
+import { authRoutes, exportRoutes, productRoutes, saleRoutes, userRoutes, viewRoutes } from "./src/api/routes/index.js";
 import { __dirname, join } from "./src/api/utils/index.js";
-// import session from "express-session";
+import session from "express-session";
 
 
-
-/* ================================
-                CONFIG
-===================================*/
-
-const {port, session_key} = environments;
-const app = express(); // Creamos una instacia de express y la almacenamos en app
+/*=====================
+	Config
+=====================*/
+const { port, session_key } = environments;
+const app = express(); // Creamos una instancia de aplicacion de express en app
 const PORT = port;
 
-app.set("view engine", "ejs");
-app.set("views", join(__dirname, "src/views"));
+app.set("view engine", "ejs"); // Configuramos EJS como motor de plantillas
+app.set("views", join(__dirname, "src/views")); // Apuntamos a la carpeta de las vistas de EJS
 
-/* ================================
-            Middlewares: 
-        entre la req y la res
-===================================*/
 
-app.use(cors()); // Middleware que permite todas las solicitudes
 
-//Middleware loger para mostrar por consola las solicitudes de  nuestro servidor
+/*=====================
+	Middlewares -> Funciones que se ejecutan entre la req y la res!
+=====================*/
+app.use(cors()); // Middleware CORS basico para permitir todas las solicitudes
 
-app.use((req,res, next) => {
-    let
-    fecha  = new Date();
+// Middleware logger para mostrar por consola las solicitudes de nuestro servidor
+app.use(loggerUrl);
 
-    console.log(`[${fecha.toLocaleDateString()} ${fecha.toLocaleTimeString
-        ()}] ${req.method} ${req.url}`)
+// Parseamos el JSON que enviamos en los formularios para recibirlos como objemos
+app.use(express.json()); // Parseamos el JSON recibido en el body automaticamente
 
-    next();
-});
-
-/*
-    Parseamos el JSON que enviamos de formularios para recibirlos
-    como objetos
-*/
-
-app.use(express.json()); 
-
+// Middleware para servir archivos estaticos
 app.use(express.static(join(__dirname, "src/public")));
 
+app.use(express.urlencoded({extended: true})); // Parseamos el urlencoded enviando con los <form> HTML
+
+// Middleware de sesion
+app.use(session({
+	secret: session_key, // Contraseña que firma las cookies para evitar manipulacion
+	resave: false, // Evita guardar la sesion si no hubo cambios
+	saveUninitialized: true // No guarda sesiones vacias
+}));
 
 
-/* ================================
-            Endpoints
-===================================*/
-
-app.get("/", (req, res) => {
-    res.send("Hola mundo! desde un servidor de Express.js");
-});
-
-//GET ALL PRODUCTS
-app.get("/api/products", async (req, res) => {
-
-    const [rows, tables] = await connection.query("SELECT * FROM products");
-
-    //enviamso una respuesta
-    res.status(200).json({
-        payload: rows
-    });
-}); // Todo lo de SELECT * FROM products
 
 
-app.get("/api/products/:id", async (req, res) => {
-
-    const id = req.params.id;
-    // req.body -> de acá recibimos la info de los forms
-    // console.log(id);
-
-    //Con los placeholders ? hacemos que nuestras consultas sean seguras.
-    const sql = `SELECT * FROM products WHERE products.id = ?`;
-    const [rows] = await connection.query(sql, [id]);
-
-    console.log(rows);
-
-
-    res.status(200).json({
-        payload: rows
-    });
-});
-
-// POST PRODUCT -> CREAR PRODUCTO
-app.post("api/products", async (req, res) => {
-
-    //Extraemos los datos del from dentro del cuerpo de la petición
-    console.log(req.body);
-    const { name, description, price, category, brand, image} = req.body;
-
-    const sql = "INSERT INTO products ( nombre_prod, descripcion_prod, precio_prod, categoria, marca, imagen) VALUES (?,?,?,?,?,?)";
-
-    await connection.query(sql, {name, description, price, category, brand, image});
-
-    res.status(201).json({
-        message : "Producto creado con éxito"
-    });
-});
 
 /*=====================
 	Rutas
 =====================*/
+// Rutas productos
+app.use("/api/products", productRoutes); // Ahora todas las peticiones que apunten a /api/products las redirigimos a product.routes
 
-app.use("/dashboard", viewRoutes);
+// Rutas ventas
+app.use("/api/sales", saleRoutes);
+
+// Rutas de usuarios
+app.use("/api/users", userRoutes);
+
+// Rutas vistas
+app.use("/dashboard", viewRoutes); // Redirigimos las consultas a /dashboard a la ruta de vistas
+
+// Rutas de exportacion (excel)
+app.use("/export", exportRoutes); // TODO, agregar este endpoint a un boton de "Descarga excel productos"
+
+// Rutas autenticacion /login -> GET y POST /logout
+app.use("/", authRoutes);
+
+
 
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en el puerto http://localhost:${PORT}`);
+	console.log(`Servidor corriendo en el puerto http://localhost:${PORT}`);
 });
