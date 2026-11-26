@@ -5,15 +5,15 @@ const urlBase = "http://localhost:3000";
 function validarFormulario(data){
     const errores = [];
 
-    if (!data.nombre_prod || data.nombre_prod.trim().length < 2) {
+    if (!data.name || data.name.trim().length < 2) {
         errores.push("El nombre debe tener al menos 2 caracteres.");
     }
 
-    if (!data.precio_prod || data.precio_prod <= 0) {
+    if (!data.price || data.price <= 0) {
         errores.push("El precio debe ser un número mayor a 0.");
     }
 
-    if (!data.categoria) {
+    if (!data.category) {
         errores.push("Debe seleccionar una categoria.");
     }
 
@@ -51,11 +51,9 @@ createProductForm.addEventListener("submit", async event => {
     console.log(formObj);
 
     //pasamos algunos datos al formato correspondiente
-    formObj.precio_prod = Number(formObj.precio_prod);
-    formObj.nombre_prod = formObj.nombre_prod?.trim() ?? "";
-    formObj.descripcion_prod = formObj.descripcion_prod?.trim() ?? "";
-    formObj.marca = formObj.marca?.trim() ?? "";
-    formObj.imagen = formObj.imagen?.trim() ?? "";
+    formObj.price = Number(formObj.price);
+    formObj.name = formObj.name?.trim() ?? "";
+    formObj.image = formObj.image?.trim() ?? "";
 
     const errores = validarFormulario(formObj);
 
@@ -82,7 +80,7 @@ createProductForm.addEventListener("submit", async event => {
         }
 
         console.log(data.message);
-        let mensajeCompleto = `${data.message} con id ${data.id}`;
+        let mensajeCompleto = `${data.message} con id ${data.productId}`;
         mostrarMensaje("exito", mensajeCompleto);
 
     } catch (error) {

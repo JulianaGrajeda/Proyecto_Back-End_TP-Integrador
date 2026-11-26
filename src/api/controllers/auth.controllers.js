@@ -2,11 +2,10 @@
 	Controladores de autenticacion
 ===============================*/
 
-import UserModels from "../models/user.models.js";
+import UserModels from "../models/user.model.js";
 import bcrypt from "bcrypt"; // Importamos bcrypt
 
 
-///////////////////
 // Vista login
 export const vistaLogin = (req, res) => {
     res.render("login", {
@@ -16,8 +15,6 @@ export const vistaLogin = (req, res) => {
 }
 
 
-
-//////////////////////////
 // Login usuario admin
 export const loginUserAdmin = async (req, res) => {
     try {
@@ -93,7 +90,6 @@ export const loginUserAdmin = async (req, res) => {
 }
 
 
-//////////////////////////
 // Logout admin
 export const logoutUserAdmin = (req, res) => {
     

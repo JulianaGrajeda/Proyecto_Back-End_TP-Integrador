@@ -113,15 +113,22 @@ export const createProduct = async (req, res) => {
 export const modifyProduct = async (req, res) => {
     try {
         const { id, name, image, price, category, active } = req.body;
+        const numericId = Number(id);
 
-        const [result] = await ProductModels.updateProduct(name, image, price, category, active, id);
+        if (!Number.isInteger(numericId) || numericId <= 0) {
+            return res.status(400).json({
+                message: "El id debe ser un numero entero positivo"
+            });
+        }
+
+        const [result] = await ProductModels.updateProduct(name, image, price, category, active, numericId);
 
         console.log(result);
 
         // Optimizacion 4: Verificamos si realmente se actualizo algo
-        if (result.changedRows === 0) {
+        if (result.affectedRows === 0) {
             return res.status(404).json({
-                message: `No se actualizo el producto`
+                message: `No se encontro el producto con id ${id}`
             });
         }
 
@@ -146,7 +153,13 @@ export const modifyProduct = async (req, res) => {
 export const removeProduct = async (req, res) => {
     try {
         
-        await ProductModels.deleteProduct(req.id);
+        const [result] = await ProductModels.deleteProduct(req.id);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                message: `No se encontro producto con id ${req.id}`
+            });
+        }
 
         res.status(200).json({
             message: `Producto con id ${req.id} eliminado correctamente`

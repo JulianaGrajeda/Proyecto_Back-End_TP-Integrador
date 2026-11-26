@@ -6,7 +6,7 @@ import connection from "../database/db.js";
 
 // Traer productos activos
 const selectActiveProducts = () => {
-    const sql = "SELECT id, nombre_prod, precio_prod, imagen FROM products WHERE products.active = 1";
+    const sql = "SELECT id, nombre_prod AS name, precio_prod AS price, imagen AS image, category, active FROM products WHERE products.active = 1";
     return connection.query(sql);
 }
 
@@ -14,7 +14,7 @@ const selectActiveProducts = () => {
 // Traer todos los productos
 const selectAllProducts = () => {
 
-    const sql = "SELECT id, nombre_prod, precio_prod, imagen FROM products";
+    const sql = "SELECT id, nombre_prod AS name, precio_prod AS price, imagen AS image, category, active FROM products";
     return connection.query(sql);
 };
 
@@ -23,7 +23,7 @@ const selectAllProducts = () => {
 
 // Traer producto por id
 const selectProductById = (id) => {
-    const sql = "SELECT id, nombre_prod, precio_prod, imagen, active FROM products WHERE products.id = ?";
+    const sql = "SELECT id, nombre_prod AS name, precio_prod AS price, imagen AS image, category, active FROM products WHERE products.id = ?";
     return connection.query(sql, [id]);
 }
 

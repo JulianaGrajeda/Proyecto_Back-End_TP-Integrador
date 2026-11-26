@@ -2,7 +2,7 @@
 	Controladores de usuario
 ===============================*/
 
-import UserModels from "../models/user.models.js";
+import UserModels from "../models/user.model.js";
 import bcrypt from "bcrypt"; // Importamos bcrypt
 
 // Creacion de usuarios admin

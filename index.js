@@ -14,8 +14,11 @@ import session from "express-session";
 	Config
 =====================*/
 const { port, session_key } = environments;
+if (!session_key) {
+	throw new Error("SESSION_KEY is required");
+}
 const app = express(); // Creamos una instancia de aplicacion de express en app
-const PORT = port;
+const PORT = port || 3000;
 
 app.set("view engine", "ejs"); // Configuramos EJS como motor de plantillas
 app.set("views", join(__dirname, "src/views")); // Apuntamos a la carpeta de las vistas de EJS
@@ -42,7 +45,7 @@ app.use(express.urlencoded({extended: true})); // Parseamos el urlencoded envian
 app.use(session({
 	secret: session_key, // Contraseña que firma las cookies para evitar manipulacion
 	resave: false, // Evita guardar la sesion si no hubo cambios
-	saveUninitialized: true // No guarda sesiones vacias
+	saveUninitialized: false // No guarda sesiones vacias
 }));
 
 

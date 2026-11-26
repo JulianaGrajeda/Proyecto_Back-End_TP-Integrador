@@ -43,12 +43,12 @@ function renderizarProducto(producto){
     let htmlProducto = `
         <ul class="lista-container">
             <li class="lista-producto">
-                <img src="${producto.imagen}" alt="${producto.nombre_prod}" class="lista-producto_img">
+                <img src="${producto.image}" alt="${producto.name}" class="lista-producto_img">
                 <p>
                     ID: ${producto.id} 
-                    Nombre: ${producto.nombre_prod} 
+                    Nombre: ${producto.name} 
                     <strong> 
-                        Precio: $${producto.precio_prod}
+                        Precio: $${producto.price}
                     </strong>
                 </p>
             </li>
