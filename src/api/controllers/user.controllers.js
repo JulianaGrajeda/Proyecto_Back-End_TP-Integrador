@@ -8,10 +8,9 @@ import bcrypt from "bcrypt"; // Importamos bcrypt
 // Creacion de usuarios admin
 export const createUserAdmin = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { email, password } = req.body;
 
-        // Si faltara algun campo de informacion en el form, lo vemos en la vista en un parrafo de error
-        if (!name || !email || !password) {
+        if (!email || !password) {
             return res.render("post", {
                 title: "Crear",
                 error: "Todos los campos son obligatorios al crear un admin"
@@ -25,7 +24,7 @@ export const createUserAdmin = async (req, res) => {
         // Hasheamos (ciframos) el password recibido en el req.body (ej: hasheamos "homero")
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        const [rows] = await UserModels.createAdminUser(name, email, hashedPassword);
+        await UserModels.createAdminUser(email, hashedPassword);
 
         return res.render("post", {
             title: "Crear",
@@ -36,8 +35,9 @@ export const createUserAdmin = async (req, res) => {
     } catch (error) {
         console.log("Error en el registro de usuarios admin: ", error);
 
-        res.status(500).json({
-            message: "Error interno del servidor al crear usuario admin"
+        return res.status(500).render("post", {
+            title: "Crear",
+            error: "No se pudo crear el usuario admin"
         });
     }
 }

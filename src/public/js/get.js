@@ -37,6 +37,12 @@ getIdProductForm.addEventListener( "submit", async event => {
     }
 });
 
+const idFromQuery = new URLSearchParams(window.location.search).get("id");
+if (idFromQuery !== null) {
+    getIdProductForm.elements.idProd.value = idFromQuery;
+    getIdProductForm.requestSubmit();
+}
+
 function renderizarProducto(producto){
     console.table(producto);
 
@@ -44,18 +50,20 @@ function renderizarProducto(producto){
         <ul class="lista-container">
             <li class="lista-producto">
                 <img src="${producto.image}" alt="${producto.name}" class="lista-producto_img">
-                <p>
-                    ID: ${producto.id} 
-                    Nombre: ${producto.name} 
-                    <strong> 
-                        Precio: $${producto.price}
-                    </strong>
-                </p>
+                <div class="lista-producto_info">
+                    <p><strong>ID:</strong> ${producto.id}</p>
+                    <p><strong>Nombre:</strong> ${producto.name}</p>
+                    <p class="lista-producto_precio"><strong>Precio: $${producto.price}</strong></p>
+                </div>
+                <button type="button" id="editProduct-button">Editar producto</button>
             </li>
         </ul>
     `;
 
     contenedorProductos.innerHTML = htmlProducto;
+    document.getElementById("editProduct-button").addEventListener("click", () => {
+        window.location.href = `/dashboard/modificar?id=${encodeURIComponent(producto.id)}`;
+    });
 
 }
 

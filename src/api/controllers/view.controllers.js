@@ -34,9 +34,9 @@ export const vistaCrear = (req, res) => {
 
 
 // Vista modificar
-export const vistaModificar =  (req, res) => {
+export const vistaModificar = (req, res) => {
     res.render("put", {
-        title: "Modificar producto",
+        title: "Modificar producto"
     })
 }
 

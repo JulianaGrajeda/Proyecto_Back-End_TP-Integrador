@@ -39,9 +39,6 @@
 
             <form id="createUserForm" action="/api/users" method="POST">
 
-                <label for="nameUser">Nombre</label>
-                <input type="text" name="name" id="nameUser" required>
-
                 <label for="emailUser">Email</label>
 		        <input type="email" name="email" id="emailUser" required>
 
@@ -56,11 +53,7 @@
 
     </main>
     
-    <div id="mensajes">
-        <!-- Si hay un mensaje de exito al crear un admin, lo muestro aca -->
-        <% if (typeof exito !== "undefined") { %>
-            <p class="mensaje exito centrado"> <%= exito %> </p>
-        <% } %>
+    <div id="mensajes" data-success-message="<%= typeof exito !== 'undefined' ? exito : '' %>">
     
         <!-- Si renderizo la plantilla post enviandole un error, se muestra aca -->
         <% if (typeof error !== "undefined") { %>

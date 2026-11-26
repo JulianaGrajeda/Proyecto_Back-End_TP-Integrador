@@ -37,6 +37,7 @@ app.use(loggerUrl);
 app.use(express.json()); // Parseamos el JSON recibido en el body automaticamente
 
 // Middleware para servir archivos estaticos
+app.get("/favicon.ico", (req, res) => res.redirect("/img/favicon.ico"));
 app.use(express.static(join(__dirname, "src/public")));
 
 app.use(express.urlencoded({extended: true})); // Parseamos el urlencoded enviando con los <form> HTML

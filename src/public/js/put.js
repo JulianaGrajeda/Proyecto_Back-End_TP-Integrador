@@ -1,5 +1,4 @@
 const contenedorProductos = document.getElementById("contenedor-productos");
-const getIdProductForm = document.getElementById("getIdProductForm");
 const urlBase = "http://localhost:3000";
 
 
@@ -51,21 +50,19 @@ function mostrarMensaje(estado, mensaje) {
 }
 
 
-// Comienza la solicitud GET a get products by id
-getIdProductForm.addEventListener("submit", async event => {
-
-    // Evitamos el envio por defecto del <form>
-    event.preventDefault();
-    
-    // Extraemos el valor del campo id 
-    const idProd = event.target.idProd.value.trim();
-
-    // Optimizacion 1: Filtramos en el cliente en caso de que no haya un id valido
-    if (!idProd || idProd <= 0) {
-        return mostrarMensaje("error", "Ingresa un id valido");
+const idFromQuery = new URLSearchParams(window.location.search).get("id");
+if (idFromQuery !== null) {
+    const idProd = Number(idFromQuery);
+    if (!Number.isInteger(idProd) || idProd <= 0) {
+        mostrarMensaje("error", "Ingresa un id valido");
+    } else {
+        buscarProducto(idProd);
     }
+} else {
+    mostrarMensaje("error", "Selecciona un producto desde Inicio o búscalo por ID en el encabezado.");
+}
 
-    
+async function buscarProducto(idProd) {
     try {
         const response = await fetch(`${urlBase}/api/products/${idProd}`);
         console.log(response);
@@ -78,41 +75,12 @@ getIdProductForm.addEventListener("submit", async event => {
         }
 
         const producto = data.payload[0];
-
-        renderizarProducto(producto);
+        mostrarFormProducto(producto);
         
     } catch (error) {
         console.error("Error al obtener producto: ", error.message);
+        mostrarMensaje("error", "Error de conexion con el servidor");
     }
-});
-
-
-function renderizarProducto(producto) {
-
-    let htmlProducto = `
-    <ul class="lista-container">
-        <li class="lista-producto">
-            <img src="${producto.image}" alt="${producto.name}" class="lista-producto_img">
-            <p>Id: ${producto.id} / Nombre: ${producto.name} / <strong>Precio: $${producto.price}</strong></p>
-            <p><button id="updateProduct-button">Actualizar producto</button></p>
-        </li>
-    </ul>
-    `;
-            
-            contenedorProductos.innerHTML = htmlProducto;
-            
-            const updateProductButton = document.getElementById("updateProduct-button");
-            
-            updateProductButton.addEventListener("click", () => {
-        
-        const confirmacion = confirm("Queres actualizar este producto?");
-
-        if (!confirmacion) {
-            alert("Actualizacion cancelada");
-        } else {
-            mostrarFormProducto(producto);
-        }
-    });
 }
 
 
@@ -124,6 +92,7 @@ function mostrarFormProducto(producto) {
     <section class="updateProduct-container">
         
         <h2>Actualizar producto</h2>
+        <p class="updateProduct-id">ID del producto: <strong>${producto.id}</strong></p>
         
         <form id="updateProductForm">
             
@@ -131,8 +100,8 @@ function mostrarFormProducto(producto) {
             
             <label for="categoryProd">Categoria</label>
             <select name="category" id="categoryProd" required>
-                <option value="serums">Serums</option>
-                <option value="cremas">Cremas</option>
+                <option value="serums" ${producto.category === "serums" ? "selected" : ""}>Serums</option>
+                <option value="cremas" ${producto.category === "cremas" ? "selected" : ""}>Cremas</option>
             </select>
 
             <label for="imageProd">Imagen</label>
@@ -146,11 +115,14 @@ function mostrarFormProducto(producto) {
 
             <label for="activeProd">Activo</label>
             <select name="active" id="activeProd" required>
-                <option value="1">Activado</option>
-                <option value="0">Desactivado</option>
+                <option value="1" ${Number(producto.active) === 1 ? "selected" : ""}>Activado</option>
+                <option value="0" ${Number(producto.active) === 0 ? "selected" : ""}>Desactivado</option>
             </select>
 
-            <input type="submit" value="Actualizar producto">
+            <div class="update-product-actions">
+                <input type="submit" value="Actualizar producto">
+                <button class="product-action product-action-delete" type="button" data-delete-product="${producto.id}">Eliminar producto</button>
+            </div>
 
         </form>
 
@@ -211,11 +183,12 @@ async function actualizarProducto(event) {
             return mostrarMensaje("error", result.message);
         }
 
-        console.log(result.message);
-        mostrarMensaje("exito", result.message);
+        window.alert(result.message || "Producto actualizado correctamente.");
+        window.location.href = "/dashboard/principal";
 
     } catch (error) {
         console.error("Error en la actualizacion del producto: ", error);
+        mostrarMensaje("error", "No se pudo actualizar el producto. Intenta nuevamente.");
     }
     
 

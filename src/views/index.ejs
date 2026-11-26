@@ -6,6 +6,10 @@
     <!-- Contenedor de los productos que vengan de /api/products -->
     <section id="contenedor-productos">
 
+        <% if (listaProductos.length === 0) { %>
+            <p class="productos-vacios">No hay productos para mostrar.</p>
+        <% } %>
+
         <!-- Ahora desde EJS ya puedo iterar directamente aca, sin necesidad de js adicional, el array de productos -->
             <% listaProductos.forEach(producto => { %>
             <div class="card-producto">
@@ -17,11 +21,18 @@
                 <p>Id: <%=producto.id%></p>
 
                 <p>$ <%=producto.price%></p>
+
+                <div class="acciones-producto">
+                    <a class="product-action product-action-edit" href="/dashboard/modificar?id=<%= producto.id %>">Modificar</a>
+                    <button class="product-action product-action-delete" type="button" data-delete-product="<%= producto.id %>">Eliminar</button>
+                </div>
             </div>
 
             <% }) %>
             
     </section>
 </main>
+
+<script src="/js/dashboard.js"></script>
 
 <%- include("partials/footer.ejs") %>

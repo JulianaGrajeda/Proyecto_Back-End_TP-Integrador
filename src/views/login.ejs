@@ -1,10 +1,9 @@
 <%- include("partials/head.ejs") %>
 
 <main class="login-container">
-
-	<h3 class="centrado"> <%= about %> </h3>
-	
-	<!-- Formulario de login 
+	<div class="login-card">
+			
+		<!-- Formulario de login 
 	
 		action: Apunta a la ruta a donde enviar los datos
 		
@@ -13,21 +12,26 @@
 		En nuestro endpoint que atienda peticiones POST a /login, podremos recibir estos datos urlencoded como objetos gracias a
 
 		app.use(express.urlencoded({extended: true}));
-	-->
-	<form id="login-form" action="/login" method="POST">
-		<label for="emailUser">Email</label>
-		<input type="email" name="email" id="emailUser" required>
+		-->
 
-		<label for="passwordUser">Password</label>
-		<input type="password" name="password" id="passwordUser" required>
+		<h3 class="centrado"><%= about %></h3>
 
-		<input type="submit" value="Login">
-	</form>
+		<form id="login-form" action="/login" method="POST">
+			<label for="emailUser">Email</label>
+			<input type="email" name="email" id="emailUser" required>
 
-	<!-- Si renderizo la plantilla login enviandole un error, se muestra aca -->
-	<% if (typeof error !== "undefined") { %>
-		<p class="mensaje error centrado"> <%= error %> </p>
-	<% } %>
+			<label for="passwordUser">Password</label>
+			<input type="password" name="password" id="passwordUser" required>
+
+			<input type="submit" value="Login">
+		</form>
+
+		
+		<!-- Si renderizo la plantilla login enviandole un error, se muestra aca -->
+		<% if (typeof error !== "undefined") { %>
+			<p class="mensaje error centrado"><%= error %></p>
+		<% } %>
+	</div>
 
 </main>
 

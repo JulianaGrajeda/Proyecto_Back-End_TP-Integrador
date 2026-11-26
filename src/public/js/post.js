@@ -1,6 +1,11 @@
-const contenedorProductos = document.getElementById("products-container");
+const contenedorProductos = document.getElementById("contenedor-productos");
 const createProductForm = document.getElementById("createProductForm");
 const urlBase = "http://localhost:3000";
+
+const mensajeConfirmacion = document.getElementById("mensajes")?.dataset.successMessage;
+if (mensajeConfirmacion) {
+    window.alert(mensajeConfirmacion);
+}
 
 function validarFormulario(data){
     const errores = [];
@@ -62,6 +67,9 @@ createProductForm.addEventListener("submit", async event => {
         return mostrarListaErrores(errores);
     }
 
+    const submitButton = createProductForm.querySelector('input[type="submit"]');
+    submitButton.disabled = true;
+
     try {
         const response = await fetch(`${urlBase}/api/products`, {
             method: "POST",
@@ -81,11 +89,14 @@ createProductForm.addEventListener("submit", async event => {
 
         console.log(data.message);
         let mensajeCompleto = `${data.message} con id ${data.productId}`;
-        mostrarMensaje("exito", mensajeCompleto);
+        window.alert(mensajeCompleto);
+        createProductForm.reset();
 
     } catch (error) {
         console.error("Error al enviar los datos: ", error);
         mostrarMensaje("error", "Error al enviar los datos");
+    } finally {
+        submitButton.disabled = false;
     }
 
 });
