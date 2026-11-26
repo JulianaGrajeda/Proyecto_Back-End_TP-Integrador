@@ -3,3 +3,7 @@ node-modules
 .env
 /node_modules
 /node_modules
+package-lock.json
+.env
+node_modules/.package-lock.json
+package-lock.json
