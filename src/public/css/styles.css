@@ -311,6 +311,14 @@ p {
   text-align: center;
 }
 
+#btn-acceso-rapido{
+  background-color: transparent;
+  border: none;
+  text-decoration: underline;
+  color: var(--color-primario-hover);
+  cursor: pointer;
+}
+
 #login-form {
   display: grid;
   gap: 10px;

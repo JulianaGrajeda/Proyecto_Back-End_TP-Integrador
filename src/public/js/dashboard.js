@@ -1,5 +1,7 @@
 const productosContainer = document.getElementById("contenedor-productos");
 
+
+
 productosContainer.addEventListener("click", async event => {
     const deleteButton = event.target.closest("[data-delete-product]");
     if (!deleteButton) {
