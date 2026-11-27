@@ -28,7 +28,7 @@ const validateId = (req, res, next) => {
 
 // Middleware para validar los campos del formulario
 const validateProduct = (req, res, next) => {
-	const categoriasValidas = ["serums", "cremas"];
+	const categoriasValidas = ["Serums", "Cremas"];
 
 	const { name, image, price, category } = req.body;
 	const errores = []; // Creamos un array vacio para ir metiendo los errores

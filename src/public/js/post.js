@@ -84,7 +84,8 @@ createProductForm.addEventListener("submit", async event => {
         const data = await response.json();
 
         if (!response.ok) {
-            return mostrarMensaje("error", data.message);
+            console.error(data.listaErrores);
+            return mostrarListaErrores(data.listaErrores || [data.message]);
         }
 
         console.log(data.message);
